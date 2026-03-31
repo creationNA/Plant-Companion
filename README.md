@@ -1,18 +1,17 @@
 # 🌿 House Plant Companion
 
-An automated, real-time environmental monitoring system for indoor plants, built on the **STM32F103RB** (ARM Cortex-M3) platform. This project tracks soil hydration and ambient light levels, providing visual and textual feedback to ensure the best plant health.
+An automated, real-time environmental monitoring system for indoor plants, built on the **STM32F103RB** (ARM Cortex-M3) platform. This project utilizes a multi-sensor array to track soil hydration and ambient light levels, providing visual and textual feedback to ensure optimal plant health.
 
 ---
 
 ## ✨ Key Features
 
 - **Dual-Sensor Monitoring:** Integrates a BH1750 digital light sensor (Lux) and a SEN0193 capacitive soil moisture sensor.
-- **Priority-Based Alert System:** Employs a state-machine logic that prioritizes hydration (`WATER NOW!`) over light levels (`LOW LIGHT`) to ensure survival-critical needs are met first.
+- **Priority-Based Alert System:** Employs a state-machine logic that prioritizes hydration (`NEED WATER!`) over light levels (`LOW LIGHT`) to ensure survival-critical needs are met first.
 - **12-Bit Precision:** Leverages the STM32's 12-bit ADC for high-resolution moisture tracking (0−4095 range).
 - **I2C Bus Efficiency:** Shares a single I2C bus between the LCD and the light sensor to minimize pin usage.
 - **Hybrid Display Logic:** Updates the status row only on state changes to prevent flickering, while providing a real-time data stream on the second row.
 - **Live Moisture %'s and LUX levels:** Shows the user the moisture percentage of the soil and also the current LUX reading coming from the sensor.
-
 ---
 
 ## 🛠 Hardware Configuration
@@ -36,7 +35,9 @@ The system utilizes the I2C serial protocol to communicate with the LCD backpack
 
 To convert raw analog voltage into a human-readable percentage, the system uses a linear mapping formula that accounts for the inverse ratio of the capacitive sensor (higher voltage = drier soil):
 
-$$\text{Moisture\%} = \frac{\text{AIR\_VALUE} - \text{currentReading}}{\text{AIR\_VALUE} - \text{WATER\_VALUE}} \times 100$$
+```
+Moisture% = (AIR_VALUE - currentReading) / (AIR_VALUE - WATER_VALUE) * 100
+```
 
 - **AIR_VALUE** (`3500`): Raw 12-bit value in open air (0% moisture).
 - **WATER_VALUE** (`500`): Raw 12-bit value fully submerged (100% moisture).
